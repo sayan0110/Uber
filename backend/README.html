@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <title>User Registration Endpoint Documentation</title>
+            <style>
+/* From extension vscode.github */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+.vscode-dark img[src$=\#gh-light-mode-only],
+.vscode-light img[src$=\#gh-dark-mode-only],
+.vscode-high-contrast:not(.vscode-high-contrast-light) img[src$=\#gh-light-mode-only],
+.vscode-high-contrast-light img[src$=\#gh-dark-mode-only] {
+	display: none;
+}
+
+</style>
+            <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex/dist/katex.min.css">
+<link href="https://cdn.jsdelivr.net/npm/katex-copytex@latest/dist/katex-copytex.min.css" rel="stylesheet" type="text/css">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/markdown.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Microsoft/vscode/extensions/markdown-language-features/media/highlight.css">
+<style>
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe WPC', 'Segoe UI', system-ui, 'Ubuntu', 'Droid Sans', sans-serif;
+                font-size: 14px;
+                line-height: 1.6;
+            }
+        </style>
+        <style>
+.task-list-item {
+    list-style-type: none;
+}
+
+.task-list-item-checkbox {
+    margin-left: -20px;
+    vertical-align: middle;
+    pointer-events: none;
+}
+</style>
+<style>
+:root {
+  --color-note: #0969da;
+  --color-tip: #1a7f37;
+  --color-warning: #9a6700;
+  --color-severe: #bc4c00;
+  --color-caution: #d1242f;
+  --color-important: #8250df;
+}
+
+</style>
+<style>
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-note: #2f81f7;
+    --color-tip: #3fb950;
+    --color-warning: #d29922;
+    --color-severe: #db6d28;
+    --color-caution: #f85149;
+    --color-important: #a371f7;
+  }
+}
+
+</style>
+<style>
+.markdown-alert {
+  padding: 0.5rem 1rem;
+  margin-bottom: 16px;
+  color: inherit;
+  border-left: .25em solid #888;
+}
+
+.markdown-alert>:first-child {
+  margin-top: 0
+}
+
+.markdown-alert>:last-child {
+  margin-bottom: 0
+}
+
+.markdown-alert .markdown-alert-title {
+  display: flex;
+  font-weight: 500;
+  align-items: center;
+  line-height: 1
+}
+
+.markdown-alert .markdown-alert-title .octicon {
+  margin-right: 0.5rem;
+  display: inline-block;
+  overflow: visible !important;
+  vertical-align: text-bottom;
+  fill: currentColor;
+}
+
+.markdown-alert.markdown-alert-note {
+  border-left-color: var(--color-note);
+}
+
+.markdown-alert.markdown-alert-note .markdown-alert-title {
+  color: var(--color-note);
+}
+
+.markdown-alert.markdown-alert-important {
+  border-left-color: var(--color-important);
+}
+
+.markdown-alert.markdown-alert-important .markdown-alert-title {
+  color: var(--color-important);
+}
+
+.markdown-alert.markdown-alert-warning {
+  border-left-color: var(--color-warning);
+}
+
+.markdown-alert.markdown-alert-warning .markdown-alert-title {
+  color: var(--color-warning);
+}
+
+.markdown-alert.markdown-alert-tip {
+  border-left-color: var(--color-tip);
+}
+
+.markdown-alert.markdown-alert-tip .markdown-alert-title {
+  color: var(--color-tip);
+}
+
+.markdown-alert.markdown-alert-caution {
+  border-left-color: var(--color-caution);
+}
+
+.markdown-alert.markdown-alert-caution .markdown-alert-title {
+  color: var(--color-caution);
+}
+
+</style>
+        
+        </head>
+        <body class="vscode-body vscode-light">
+            <h1 id="user-registration-endpoint-documentation">User Registration Endpoint Documentation</h1>
+<h2 id="endpoint">Endpoint</h2>
+<p><code>POST /user/register</code></p>
+<h2 id="description">Description</h2>
+<p>Registers a new user in the system. Validates the input data, hashes the password, and stores the user in the database. Returns a JWT token and user data upon successful registration.</p>
+<h2 id="request-body">Request Body</h2>
+<p>The endpoint expects a JSON object with the following structure:</p>
+<pre><code>{
+  &quot;fullName&quot;: {
+    &quot;firstName&quot;: &quot;string (min 3 chars)&quot;,
+    &quot;lastName&quot;: &quot;string (min 3 chars)&quot;
+  },
+  &quot;email&quot;: &quot;string (valid email)&quot;,
+  &quot;password&quot;: &quot;string (min 8 chars)&quot;
+}
+</code></pre>
+<h3 id="example-request">Example Request</h3>
+<pre><code>POST /user/register
+Content-Type: application/json
+
+{
+  &quot;fullName&quot;: {
+    &quot;firstName&quot;: &quot;John&quot;,
+    &quot;lastName&quot;: &quot;Doe&quot;
+  },
+  &quot;email&quot;: &quot;john.doe@example.com&quot;,
+  &quot;password&quot;: &quot;supersecret123&quot;
+}
+</code></pre>
+<h2 id="validation">Validation</h2>
+<ul>
+<li><code>email</code> must be a valid email address.</li>
+<li><code>fullName.firstName</code> and <code>fullName.lastName</code> must be at least 3 characters.</li>
+<li><code>password</code> must be at least 8 characters.</li>
+</ul>
+<h2 id="response">Response</h2>
+<h3 id="success-200-ok">Success (200 OK)</h3>
+<pre><code>{
+  &quot;user&quot;: {
+    &quot;_id&quot;: &quot;&lt;user_id&gt;&quot;,
+    &quot;fullName&quot;: {
+      &quot;firstName&quot;: &quot;John&quot;,
+      &quot;lastName&quot;: &quot;Doe&quot;
+    },
+    &quot;email&quot;: &quot;john.doe@example.com&quot;
+  }
+}
+</code></pre>
+<h3 id="validation-error-200-ok">Validation Error (200 OK)</h3>
+<pre><code>{
+  &quot;errors&quot;: [
+    {
+      &quot;msg&quot;: &quot;Invalid Email&quot;,
+      &quot;param&quot;: &quot;email&quot;,
+      &quot;location&quot;: &quot;body&quot;
+    }
+    // ...other errors
+  ]
+}
+</code></pre>
+<h3 id="other-errors">Other Errors</h3>
+<ul>
+<li>If the email is already registered: <code>{ &quot;error&quot;: &quot;Email is already registered&quot; }</code></li>
+<li>If required fields are missing: <code>{ &quot;error&quot;: &quot;All fields are required&quot; }</code></li>
+</ul>
+<h2 id="data-storage-format">Data Storage Format</h2>
+<p>User data is stored in the database as:</p>
+<pre><code>{
+  &quot;_id&quot;: &quot;&lt;user_id&gt;&quot;,
+  &quot;fullName&quot;: {
+    &quot;firstName&quot;: &quot;John&quot;,
+    &quot;lastName&quot;: &quot;Doe&quot;
+  },
+  &quot;email&quot;: &quot;john.doe@example.com&quot;,
+  &quot;password&quot;: &quot;&lt;hashed_password&gt;&quot;
+}
+</code></pre>
+<h2 id="sample-registered-user-data">Sample Registered User Data</h2>
+<pre><code>{
+  &quot;_id&quot;: &quot;60f7c2b5e1d2c8a1b4e5d123&quot;,
+  &quot;fullName&quot;: {
+    &quot;firstName&quot;: &quot;John&quot;,
+    &quot;lastName&quot;: &quot;Doe&quot;
+  },
+  &quot;email&quot;: &quot;john.doe@example.com&quot;,
+  &quot;password&quot;: &quot;$2b$10$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36r1aFQy4l6l1aFQy4l6l1aFQy&quot;
+}
+</code></pre>
+
+            <script async src="https://cdn.jsdelivr.net/npm/katex-copytex@latest/dist/katex-copytex.min.js"></script>
+            
+        </body>
+        </html>
