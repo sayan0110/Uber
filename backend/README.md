@@ -211,3 +211,34 @@ Content-Type: application/json
   "error": "Invalid email or password"
 }
 ```
+
+# Authentication Middleware (`auth.middleware.js`)
+
+This middleware protects routes by verifying JWT tokens and checking if the token is blacklisted.
+
+### How It Works
+- Extracts the token from cookies or the `Authorization` header.
+- Checks if the token is present. If not, returns a 401 Unauthorized error.
+- Checks if the token is blacklisted (should use the `BlacklistToken` collection).
+- Verifies the token using JWT and the secret key.
+- Fetches the user from the database using the decoded token payload.
+- If the user is found, attaches the user to `req.user` and calls `next()`.
+- If any check fails, returns an appropriate error response.
+
+### Example Usage
+
+```js
+const authMiddleware = require('./middlewares/auth.middleware');
+
+app.get('/profile', authMiddleware.authUser, (req, res) => {
+  res.json({ user: req.user });
+});
+```
+
+### Error Responses
+- `401 Unauthorized`: No token provided, token is blacklisted, or user not found.
+- `400 Bad Request`: Invalid token.
+
+### Improvements
+- Ensure blacklisted tokens are checked using the correct model (`BlacklistToken`).
+- Clear tokens from client after logout for full security.
