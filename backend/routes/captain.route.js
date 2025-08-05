@@ -16,5 +16,15 @@ router.post('/register', [
     body('vehicals.carTypes').isIn(['car', 'motorcycle', 'auto']).withMessage('Car type must be one of: card, motorcycle, auto')
 ], captainController.register)
 
+router.post('/login',[
+    body('email').isEmail().withMessage('Invalid Email'),
+    body('password').isLength({ min: 6 }).withMessage('Password must be at least 8 characters long'),
+], captainController.login)
+
+
+router.get('/profile', authMiddleware.authCaptain, captainController.getCaptainProfile);
+
+router.get('/logout', authMiddleware.authCaptain, captainController.logoutCaptain);
+
 
 module.exports = router;
