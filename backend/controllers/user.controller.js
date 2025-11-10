@@ -31,7 +31,7 @@ module.exports.registerUser = async (req, res, next) => {
         email: email.toLowerCase(),
         hashPassword
     })
-console.log(user);
+    console.log(user);
 
 
     const token = user.generateAuthToken();

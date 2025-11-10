@@ -11,9 +11,9 @@ module.exports.authUser = async (req, res, next) => {
    }
    const isBlacklisted = await blacklistTokenModel.exists({ token });
    if (isBlacklisted) {
-         return res.status(401).json({error: 'Token is blacklisted'});
+        return res.status(401).json({error: 'Token is blacklisted'});
     }
-   try {
+    try {
        const decoded = jwt.verify(token, process.env.JWT_SECRET);
        const user = await userModel.findById(decoded._id);
        if (!user) {
@@ -21,9 +21,9 @@ module.exports.authUser = async (req, res, next) => {
        }
        req.user = user;
        next();
-   } catch (error) {
-       return res.status(400).json({error: 'Invalid token'});
-   }
+    } catch (error) {
+        return res.status(400).json({error: 'Invalid token'});
+    }
 }
 
 module.exports.authCaptain = async (req, res, next) => {

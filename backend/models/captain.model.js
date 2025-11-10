@@ -71,7 +71,7 @@ const captainSchema = new mongoose.Schema({
 
 
 captainSchema.methods.generateAuthToken = function () {
-    const token = jwt.sign({_id: this._id, fullname: this.fullName, email: this.email, vehicals: this.vehicals, status: this.status, location: this.location}, process.env.JWT_SECRET, {expiresIn: '10Y'});
+    const token = jwt.sign({_id: this._id, fullname: this.fullName, email: this.email, vehicals: this.vehicals, status: this.status, location: this.location}, process.env.JWT_CAPTAIN_KEY, {expiresIn: '10Y'});
     return token;
 }
 
